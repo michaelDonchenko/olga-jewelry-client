@@ -213,7 +213,7 @@ const UpdateProduct = ({ match, history }) => {
       <h2 style={{ textAlign: 'center', margin: '30px 0' }}>Update Product</h2>
       {loadCategories && (
         <div style={{ textAlign: 'center', margin: '15px 0' }}>
-          <CircularProgress color='black' />
+          <CircularProgress color="black" />
         </div>
       )}
       <div style={{ maxWidth: '500px', margin: 'auto' }}>
@@ -222,61 +222,61 @@ const UpdateProduct = ({ match, history }) => {
             <TextField
               onChange={handleChange}
               style={{ margin: '15px 0' }}
-              name='name'
+              name="name"
               value={name}
-              label='Name'
+              label="Name"
               fullWidth
-              type='text'
-              helperText='Enter product name'
+              type="text"
+              helperText="Enter product name"
               required
             ></TextField>
 
             <TextField
               onChange={handleChange}
               style={{ margin: '15px 0' }}
-              name='description'
+              name="description"
               value={description}
-              label='Description'
+              label="Description"
               multiline
               rows={5}
               fullWidth
-              type='text'
-              helperText='Enter product description'
+              type="text"
+              helperText="Enter product description"
               required
             ></TextField>
 
             <TextField
               onChange={handleChange}
               style={{ margin: '15px 0' }}
-              name='price'
-              value={price < 0 ? 1 : price}
-              label='Price'
+              name="price"
+              value={price}
+              label="Price"
               fullWidth
-              type='number'
-              helperText='Enter product price'
+              type="number"
+              helperText="Enter product price"
               required
             ></TextField>
 
             <TextField
               onChange={handleChange}
               style={{ margin: '15px 0' }}
-              name='quantity'
-              value={quantity < 0 ? 1 : quantity}
-              label='Quantity'
+              name="quantity"
+              value={quantity}
+              label="Quantity"
               fullWidth
-              type='number'
-              helperText='Enter product quantity'
+              type="number"
+              helperText="Enter product quantity"
               required
             ></TextField>
 
             <FormControl fullWidth required style={{ margin: '15px 0' }}>
-              <InputLabel id='demo-simple-select-label'>
+              <InputLabel id="demo-simple-select-label">
                 Select Category
               </InputLabel>
               <Select
                 onChange={handleCategoryChange}
-                labelId='demo-simple-select-label'
-                id='demo-simple-select'
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
                 value={category}
               >
                 {categories &&
@@ -295,22 +295,22 @@ const UpdateProduct = ({ match, history }) => {
                 flexWrap: 'wrap',
                 marginTop: '30px',
               }}
-              labelId='images'
-              type='file'
-              accept='image/*'
+              labelId="images"
+              type="file"
+              accept="image/*"
               multiple
-              name='image'
+              name="image"
               onChange={handleImageChange}
             />
             {uploadLoading && (
               <div style={{ textAlign: 'center', margin: '15px 0' }}>
-                <CircularProgress color='black' />
+                <CircularProgress color="black" />
               </div>
             )}
             {uploadError && (
               <Alert
                 style={{ margin: '15px 0' }}
-                severity='error'
+                severity="error"
                 onClose={() => {
                   setState({ ...state, uploadError: false })
                 }}
@@ -372,7 +372,7 @@ const UpdateProduct = ({ match, history }) => {
                                 console.log(error)
                               })
                           }}
-                          color='secondary'
+                          color="secondary"
                           badgeContent={
                             <Button style={{ color: 'white' }}>Delete</Button>
                           }
@@ -395,13 +395,13 @@ const UpdateProduct = ({ match, history }) => {
 
           {loading && (
             <div style={{ textAlign: 'center', margin: '15px 0' }}>
-              <CircularProgress color='black' />
+              <CircularProgress color="black" />
             </div>
           )}
           {error && (
             <Alert
               style={{ margin: '15px 0' }}
-              severity='error'
+              severity="error"
               onClose={() => {
                 setState({ ...state, error: false })
               }}
@@ -412,7 +412,7 @@ const UpdateProduct = ({ match, history }) => {
           {success && (
             <Alert
               style={{ margin: '15px 0' }}
-              severity='success'
+              severity="success"
               onClose={() => {
                 setState({ ...state, success: false })
               }}
@@ -429,8 +429,8 @@ const UpdateProduct = ({ match, history }) => {
             }}
             fullWidth
             startIcon={<CreateIcon />}
-            type='submit'
-            variant='contained'
+            type="submit"
+            variant="contained"
           >
             Update Product
           </Button>

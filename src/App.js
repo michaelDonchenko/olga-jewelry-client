@@ -20,6 +20,10 @@ import UpdateProduct from './Pages/adminPages/UpdateProduct'
 import firebase from 'firebase'
 import { useDispatch, useSelector } from 'react-redux'
 import { REFRESH_TOKEN } from './types/userTypes'
+import Product from './Pages/Product'
+import Category from './Pages/Category'
+import Checkout from './Pages/Checkout'
+import OrderSuccess from './Pages/OrderSuccess'
 
 const App = () => {
   const user = useSelector((state) => state.user)
@@ -66,7 +70,7 @@ const App = () => {
         console.log('forced refresh')
         return await firebaseUser.getIdToken(true)
       }
-    }, 10 * 60 * 3000)
+    }, 60000 * 10)
 
     // clean up setInterval
     return () => clearInterval(handle)
@@ -78,35 +82,54 @@ const App = () => {
 
       <Container>
         <Switch>
-          <Route exact path='/' component={Home} />
-          <Route exact path='/login' component={Login} />
-          <Route exact path='/register' component={Register} />
-          <Route exact path='/register/complete' component={RegisterComplete} />
-          <Route exact path='/shop' component={Shop} />
-          <Route exact path='/cart' component={Cart} />
-          <PrivateRoute exact path='/user/profile' component={UserProfile} />
+          <Route exact path="/" component={Home} />
+          <Route exact path="/login" component={Login} />
+          <Route exact path="/register" component={Register} />
+          <Route exact path="/register/complete" component={RegisterComplete} />
+          <Route exact path="/shop" component={Shop} />
+          <Route exact path="/shop/:pageNumber" component={Shop} />
+          <Route exact path="/product/:id" component={Product} />
+          <Route exact path="/category/:slug" component={Category} />
+          <Route
+            exact
+            path="/category/:slug/:pageNumber"
+            component={Category}
+          />
+          <Route exact path="/cart" component={Cart} />
+          <PrivateRoute exact path="/checkout" component={Checkout} />
           <PrivateRoute
             exact
-            path='/user/history'
+            path="/order-success/:id"
+            component={OrderSuccess}
+          />
+          <PrivateRoute exact path="/user/profile" component={UserProfile} />
+          <PrivateRoute
+            exact
+            path="/user/history"
             component={PurchaseHistory}
           />
           <AdminRoute
             exact
-            path='/admin/dashboard'
+            path="/admin/dashboard"
             component={AdminDashboard}
           />
           <AdminRoute
             exact
-            path='/admin/categories'
+            path="/admin/categories"
             component={AdminCategories}
           />
-          <AdminRoute exact path='/admin/product' component={CreateProduct} />
+          <AdminRoute exact path="/admin/product" component={CreateProduct} />
           <AdminRoute
             exact
-            path='/admin/product/:id'
+            path="/admin/product/:id"
             component={UpdateProduct}
           />
-          <AdminRoute exact path='/admin/products' component={AdminProducts} />
+          <AdminRoute exact path="/admin/products" component={AdminProducts} />
+          <AdminRoute
+            exact
+            path="/admin/products/:pageNumber"
+            component={AdminProducts}
+          />
         </Switch>
       </Container>
     </>

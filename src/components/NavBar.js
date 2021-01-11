@@ -19,6 +19,8 @@ import PersonIcon from '@material-ui/icons/Person'
 import firebase from 'firebase'
 import { LOGOUT } from '../types/userTypes'
 import DashboardIcon from '@material-ui/icons/Dashboard'
+import { withStyles } from '@material-ui/core/styles'
+import Badge from '@material-ui/core/Badge'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -41,10 +43,21 @@ const useStyles = makeStyles(() => ({
   activeLink: { color: '#0277bd' },
 }))
 
+const StyledBadge = withStyles((theme) => ({
+  badge: {
+    top: 13,
+    border: `2px solid ${theme.palette.background.paper}`,
+    padding: '8px 6px',
+    fontSize: '14px',
+  },
+}))(Badge)
+
 const NavBar = () => {
   const classes = useStyles()
   const user = useSelector((state) => state.user)
   const dispatch = useDispatch()
+
+  const cart = useSelector((state) => state.cart)
 
   const [anchorEl, setAnchorEl] = React.useState(null)
 
@@ -66,7 +79,7 @@ const NavBar = () => {
   }
 
   return (
-    <AppBar position='sticky' className={classes.root}>
+    <AppBar position="sticky" className={classes.root}>
       <Container maxWidth={'lg'} style={{ padding: '0' }}>
         <Toolbar>
           <Typography className={classes.title}>
@@ -75,7 +88,7 @@ const NavBar = () => {
             </Hidden>
 
             <Hidden xsDown>
-              <Tooltip placement='bottom-start' title='Home'>
+              <Tooltip placement="bottom-start" title="Home">
                 <NavLink
                   exact={true}
                   activeStyle={{
@@ -83,46 +96,51 @@ const NavBar = () => {
                     backgroundColor: '#e1f5fe',
                     padding: '10px 0 12px 0',
                   }}
-                  to='/'
+                  to="/"
                   className={classes.link}
                 >
-                  <Button color='inherit'>
+                  <Button color="inherit">
                     <HomeIcon className={classes.navIcon}></HomeIcon>
                   </Button>
                 </NavLink>
               </Tooltip>
 
-              <Tooltip placement='bottom-start' title='Shop'>
+              <Tooltip placement="bottom-start" title="Shop">
                 <NavLink
                   activeStyle={{
                     color: '#0277bd',
                     backgroundColor: '#e1f5fe',
                     padding: '10px 0 12px 0',
                   }}
-                  to='/shop'
+                  to="/shop"
                   className={classes.link}
                 >
-                  <Button color='inherit'>
+                  <Button color="inherit">
                     <ShopIcon className={classes.navIcon}></ShopIcon>
                   </Button>
                 </NavLink>
               </Tooltip>
 
-              <Tooltip placement='bottom-start' title='Cart'>
+              <Tooltip placement="bottom-start" title="Cart">
                 <NavLink
                   activeStyle={{
                     color: '#0277bd',
                     backgroundColor: '#e1f5fe',
                     padding: '10px 0 12px 0',
                   }}
-                  to='/cart'
+                  to="/cart"
                   className={classes.link}
                 >
-                  <Button color='inherit'>
-                    <ShoppingCartIcon
-                      className={classes.navIcon}
-                    ></ShoppingCartIcon>
-                  </Button>
+                  <StyledBadge
+                    badgeContent={cart && cart.length}
+                    color="secondary"
+                  >
+                    <Button color="inherit">
+                      <ShoppingCartIcon
+                        className={classes.navIcon}
+                      ></ShoppingCartIcon>
+                    </Button>
+                  </StyledBadge>
                 </NavLink>
               </Tooltip>
             </Hidden>
@@ -135,10 +153,10 @@ const NavBar = () => {
                   color: '#0277bd',
                   backgroundColor: '#e1f5fe',
                 }}
-                to='/login'
+                to="/login"
                 className={classes.link}
               >
-                <Button color='inherit'>
+                <Button color="inherit">
                   <span>Login</span>
                 </Button>
               </NavLink>
@@ -148,10 +166,10 @@ const NavBar = () => {
                   color: '#0277bd',
                   backgroundColor: '#e1f5fe',
                 }}
-                to='/register'
+                to="/register"
                 className={classes.link}
               >
-                <Button color='inherit'>
+                <Button color="inherit">
                   <span>Register</span>
                 </Button>
               </NavLink>
@@ -159,16 +177,16 @@ const NavBar = () => {
           )}
           {user && user.role === 'subscriber' && (
             <Tooltip
-              placement='bottom-start'
+              placement="bottom-start"
               title={`menu for user ${user.email}`}
             >
               <Button
-                aria-controls='simple-menu'
-                aria-haspopup='true'
+                aria-controls="simple-menu"
+                aria-haspopup="true"
                 onClick={handleClick}
                 startIcon={<AccountCircleIcon style={{ fontSize: '1.5rem' }} />}
                 className={classes.link}
-                color='inherit'
+                color="inherit"
               >
                 <span>User Menu</span>
               </Button>
@@ -182,13 +200,13 @@ const NavBar = () => {
                 color: '#0277bd',
                 backgroundColor: '#e1f5fe',
               }}
-              to='/admin/dashboard'
+              to="/admin/dashboard"
               className={classes.link}
             >
               <Button
                 startIcon={<DashboardIcon />}
                 className={classes.link}
-                color='inherit'
+                color="inherit"
               >
                 <span>Admin Dashboard</span>
               </Button>
@@ -197,7 +215,7 @@ const NavBar = () => {
         </Toolbar>
 
         <Menu
-          id='simple-menu'
+          id="simple-menu"
           anchorEl={anchorEl}
           keepMounted
           open={Boolean(anchorEl)}
@@ -209,7 +227,7 @@ const NavBar = () => {
               backgroundColor: '#e1f5fe',
             }}
             className={classes.link}
-            to='/user/profile'
+            to="/user/profile"
           >
             <MenuItem onClick={handleClose}>
               <PersonIcon className={classes.menuIcon} /> Profile
@@ -222,7 +240,7 @@ const NavBar = () => {
               backgroundColor: '#e1f5fe',
             }}
             className={classes.link}
-            to='/user/history'
+            to="/user/history"
           >
             <MenuItem onClick={handleClose}>
               <HistoryIcon className={classes.menuIcon} /> Purchase history

@@ -11,6 +11,7 @@ import {
   TableRow,
 } from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import AdminNav from '../../components/admin/AdminNav'
 import AdminSideNav from '../../components/admin/AdminSideNav'
 import {
@@ -18,10 +19,12 @@ import {
   productRemove,
 } from '../../controllers/productControllers'
 import { useSelector } from 'react-redux'
-import { Alert } from '@material-ui/lab'
+import { Alert, Pagination, PaginationItem } from '@material-ui/lab'
 import { storage } from '../../firebase'
 
-const AdminProducts = ({ history }) => {
+const AdminProducts = ({ history, match }) => {
+  const pageNumber = match.params.pageNumber || 1
+
   const [state, setState] = useState({
     products: [],
     error: '',
@@ -29,6 +32,9 @@ const AdminProducts = ({ history }) => {
     deleteLoading: '',
     deleteSuccess: '',
     deleteError: '',
+    page: '',
+    pages: '',
+    pageSize: '',
   })
 
   const user = useSelector((state) => state.user)
@@ -40,20 +46,30 @@ const AdminProducts = ({ history }) => {
     deleteError,
     deleteLoading,
     deleteSuccess,
+    page,
+    pages,
+    pageSize,
   } = state
 
   const listProducts = async () => {
     setState({ ...state, loading: true })
     try {
-      const { data } = await getProducts(user.token)
-      setState({ ...state, products: data, loading: false })
+      const { data } = await getProducts(pageNumber, 10)
+      setState({
+        ...state,
+        products: data.products,
+        page: data.page,
+        pages: data.pages,
+        pageSize: data.pageSize,
+        loading: false,
+      })
     } catch (error) {
       console.log(error)
       setState({ ...state, error: error.response.data.error, loading: false })
     }
   }
 
-  useEffect(() => listProducts(), [])
+  useEffect(() => listProducts(), [pageNumber])
 
   const deleteProduct = async (imgs, id) => {
     try {
@@ -66,11 +82,11 @@ const AdminProducts = ({ history }) => {
       }
 
       await productRemove(user.token, id)
-      const { data } = await getProducts(user.token)
+      const { data } = await getProducts()
 
       setState({
         ...state,
-        products: data,
+        products: data.products,
         deleteLoading: false,
         deleteSuccess: 'Product Deleted succefully.',
         deleteError: false,
@@ -100,14 +116,14 @@ const AdminProducts = ({ history }) => {
       <h2 style={{ textAlign: 'center', margin: '30px 0' }}>Products list</h2>
       {loading && (
         <div style={{ textAlign: 'center', margin: '15px 0' }}>
-          <CircularProgress color='black' />
+          <CircularProgress color="black" />
         </div>
       )}
 
       {error && (
         <Alert
           style={{ margin: '15px 0' }}
-          severity='error'
+          severity="error"
           onClose={() => {
             setState({ ...state, error: false })
           }}
@@ -119,7 +135,7 @@ const AdminProducts = ({ history }) => {
       {deleteError && (
         <Alert
           style={{ margin: '15px 0' }}
-          severity='error'
+          severity="error"
           onClose={() => {
             setState({ ...state, deleteError: false })
           }}
@@ -131,7 +147,7 @@ const AdminProducts = ({ history }) => {
       {deleteSuccess && (
         <Alert
           style={{ margin: '15px 0' }}
-          severity='success'
+          severity="success"
           onClose={() => {
             setState({ ...state, deleteSuccess: false })
           }}
@@ -141,51 +157,53 @@ const AdminProducts = ({ history }) => {
       )}
 
       <TableContainer component={Paper}>
-        <Table aria-label='customized table'>
+        <Table aria-label="customized table">
           <TableHead>
             <TableRow>
-              <TableCell align='left'>Product name</TableCell>
-              <TableCell align='left'>price</TableCell>
-              <TableCell align='left'>category</TableCell>
-              <TableCell align='left'>quantity</TableCell>
-              <TableCell align='left'>Main image</TableCell>
-              <TableCell align='left'></TableCell>
-              <TableCell align='left'></TableCell>
+              <TableCell align="left">Product name</TableCell>
+              <TableCell align="left">price</TableCell>
+              <TableCell align="left">category</TableCell>
+              <TableCell align="left">quantity</TableCell>
+              <TableCell align="left">Main image</TableCell>
+              <TableCell align="left"></TableCell>
+              <TableCell align="left"></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {products &&
               products.map((p) => (
                 <TableRow key={p._id}>
-                  <TableCell align='left'>{p.name}</TableCell>
-                  <TableCell align='left'>{p.price}</TableCell>
-                  <TableCell align='left'>
+                  <TableCell width={'25%'} align="left">
+                    {p.name}
+                  </TableCell>
+                  <TableCell align="left">{p.price}</TableCell>
+                  <TableCell align="left">
                     {p.category ? p.category.name : 'No category found'}
                   </TableCell>
-                  <TableCell align='left'>{p.quantity}</TableCell>
-                  <TableCell align='left'>
+                  <TableCell align="left">{p.quantity}</TableCell>
+                  <TableCell align="left">
                     {
                       <img
                         style={{ height: '50px' }}
                         src={p.images[0]}
-                        alt='Image not found'
+                        alt="Image not found"
                       />
                     }
                   </TableCell>
-                  <TableCell align='left'>
+                  <TableCell align="left">
                     <Button
                       onClick={() => history.push(`/admin/product/${p._id}`)}
-                      variant='outlined'
-                      color='primary'
+                      variant="outlined"
+                      color="primary"
                     >
                       Update
                     </Button>
                   </TableCell>
-                  <TableCell align='left'>
+                  <TableCell align="left">
                     <Button
                       onClick={() => deleteProduct(p.images, p._id)}
-                      variant='outlined'
-                      color='secondary'
+                      variant="outlined"
+                      color="secondary"
                     >
                       {deleteLoading ? <CircularProgress /> : 'Delete'}
                     </Button>
@@ -195,6 +213,32 @@ const AdminProducts = ({ history }) => {
           </TableBody>
         </Table>
       </TableContainer>
+      <div
+        style={{
+          margin: '15px 0 50px 0',
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      >
+        {pages && (
+          <Pagination
+            hidePrevButton
+            hideNextButton
+            showFirstButton
+            showLastButton
+            color="primary"
+            count={pages}
+            renderItem={(item) => (
+              <PaginationItem
+                component={Link}
+                page={pageNumber}
+                to={`/admin/products/${item.page}`}
+                {...item}
+              />
+            )}
+          />
+        )}
+      </div>
     </div>
   )
 }

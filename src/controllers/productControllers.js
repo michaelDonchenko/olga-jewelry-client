@@ -21,8 +21,11 @@ export const productUpdate = async (id, authtoken, values) => {
   })
 }
 
-export const getProducts = async () => {
-  return await axios.get(`${REACT_APP_SERVER_URL}/api/products`)
+export const getProducts = async (pageNumber, pageSize, sort, order) => {
+  return await axios.post(
+    `${REACT_APP_SERVER_URL}/api/list-products?pageNumber=${pageNumber}&pageSize=${pageSize}`,
+    { sort, order }
+  )
 }
 
 export const readProduct = async (id) => {
