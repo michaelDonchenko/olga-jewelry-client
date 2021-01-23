@@ -132,11 +132,11 @@ const RegisterComplete = ({ history }) => {
     >
       <h1>Complete Registration</h1>
 
-      {loading && <CircularProgress color='black' />}
+      {loading && <CircularProgress color="black" />}
       {error && (
         <Alert
           style={{ margin: '15px 0' }}
-          severity='error'
+          severity="error"
           onClose={() => {
             setValues({ ...values, error: false })
           }}
@@ -145,16 +145,16 @@ const RegisterComplete = ({ history }) => {
         </Alert>
       )}
 
-      <form onSubmit={handleSubmit} autoComplete='off'>
+      <form onSubmit={handleSubmit} autoComplete="off">
         <TextField
           onChange={handleChange}
           className={classes.inputField}
           value={email}
-          name='email'
-          label='Email'
+          name="email"
+          label="Email"
           fullWidth
-          type='email'
-          helperText='Enter your email'
+          type="email"
+          helperText="Enter your email"
           disabled
           required
         />
@@ -163,11 +163,11 @@ const RegisterComplete = ({ history }) => {
           onChange={handleChange}
           className={classes.inputField}
           value={password}
-          name='password'
-          label='Password'
+          name="password"
+          label="Password"
           fullWidth
-          type='password'
-          helperText='Enter your password'
+          type="password"
+          helperText="Enter your password"
           required
         />
 
@@ -175,25 +175,24 @@ const RegisterComplete = ({ history }) => {
           onChange={handleChange}
           className={classes.inputField}
           value={confirmPassword}
-          name='confirmPassword'
-          label='Confirm passwrod'
+          name="confirmPassword"
+          label="Confirm passwrod"
           fullWidth
-          type='password'
-          helperText='Enter your password again'
+          type="password"
+          helperText="Enter your password again"
           required
         />
 
         <Button
-          style={{ backgroundColor: '#311b92', color: 'white' }}
+          style={{ backgroundColor: '#7e57c2', color: 'white' }}
           className={classes.button}
-          type='submit'
+          type="submit"
           fullWidth
-          variant='contained'
+          variant="contained"
         >
           Complete Registration
         </Button>
       </form>
-      {JSON.stringify(values)}
     </Container>
   )
 }

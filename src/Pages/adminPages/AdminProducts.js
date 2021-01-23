@@ -46,9 +46,7 @@ const AdminProducts = ({ history, match }) => {
     deleteError,
     deleteLoading,
     deleteSuccess,
-    page,
     pages,
-    pageSize,
   } = state
 
   const listProducts = async () => {
@@ -116,7 +114,7 @@ const AdminProducts = ({ history, match }) => {
       <h2 style={{ textAlign: 'center', margin: '30px 0' }}>Products list</h2>
       {loading && (
         <div style={{ textAlign: 'center', margin: '15px 0' }}>
-          <CircularProgress color="black" />
+          <CircularProgress />
         </div>
       )}
 
@@ -176,7 +174,7 @@ const AdminProducts = ({ history, match }) => {
                   <TableCell width={'25%'} align="left">
                     {p.name}
                   </TableCell>
-                  <TableCell align="left">{p.price}</TableCell>
+                  <TableCell align="left">₪{p.price}</TableCell>
                   <TableCell align="left">
                     {p.category ? p.category.name : 'No category found'}
                   </TableCell>

@@ -32,8 +32,8 @@ const AdminNav = () => {
   const classes = useStyles()
   const dispatch = useDispatch()
 
-  const logoutHandler = () => {
-    firebase.auth().signOut()
+  const logoutHandler = async () => {
+    await firebase.auth().signOut()
     dispatch({
       type: LOGOUT,
       payload: null,
@@ -43,26 +43,31 @@ const AdminNav = () => {
 
   return (
     <List className={classes.flexContainer}>
-      <NavLink className={classes.link} to='/admin/dashboard'>
+      <NavLink className={classes.link} to="/admin/dashboard">
         <ListItem button>
-          <ListItemText primary='Orders' />
+          <ListItemText primary="Orders" />
         </ListItem>
       </NavLink>
 
-      <NavLink className={classes.link} to='/admin/categories'>
+      <NavLink className={classes.link} to="/admin/categories">
         <ListItem button>
-          <ListItemText primary='Categories' />
+          <ListItemText primary="Categories" />
         </ListItem>
       </NavLink>
 
-      <NavLink className={classes.link} to='/admin/product'>
+      <NavLink className={classes.link} to="/admin/product">
         <ListItem button>
-          <ListItemText primary='Create product' />
+          <ListItemText primary="Create product" />
         </ListItem>
       </NavLink>
-      <NavLink className={classes.link} to='/admin/products'>
+      <NavLink className={classes.link} to="/admin/products">
         <ListItem button>
-          <ListItemText primary='All products' />
+          <ListItemText primary="All products" />
+        </ListItem>
+      </NavLink>
+      <NavLink className={classes.link} to="/admin/comments">
+        <ListItem button>
+          <ListItemText primary="Comments" />
         </ListItem>
       </NavLink>
 
@@ -74,7 +79,7 @@ const AdminNav = () => {
         <ListItemIcon style={{ minWidth: '30px', color: 'white' }}>
           <ExitToAppIcon />
         </ListItemIcon>
-        <ListItemText primary='Logout' />
+        <ListItemText primary="Logout" />
       </ListItem>
     </List>
   )

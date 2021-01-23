@@ -15,9 +15,10 @@ const useStyles = makeStyles({
   root: {
     maxWidth: 250,
     height: 550,
+
     margin: '15px',
-    border: '2px solid ',
-    borderColor: '#fafafa',
+    border: '1px solid ',
+    borderColor: '#e1f5fe',
     '&:hover': {
       boxShadow:
         'rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px',
@@ -31,13 +32,7 @@ const useStyles = makeStyles({
 
   button: {
     margin: '10px',
-    backgroundColor: 'black',
-    color: 'white',
-    '&:hover': {
-      margin: '10px',
-      backgroundColor: 'black',
-      color: 'white',
-    },
+    fontWeight: '600',
   },
 })
 
@@ -97,7 +92,7 @@ export default function HomeCard({ item }) {
             style={{ fontSize: '16px' }}
             variant="body2"
             color="textSecondary"
-            component="p"
+            component="div"
           >
             <p>
               Price:{' '}
@@ -116,10 +111,10 @@ export default function HomeCard({ item }) {
               {item.quantity > 0 ? (
                 <span
                   style={{
-                    color: 'white',
+                    color: '#388e3c',
                     marginLeft: '10px',
-                    backgroundColor: '#388e3c',
                     padding: '3px 5px',
+                    backgroundColor: '#e8f5e9',
                   }}
                 >
                   In Stock
@@ -127,13 +122,13 @@ export default function HomeCard({ item }) {
               ) : (
                 <span
                   style={{
-                    color: 'white',
+                    color: '#f50057',
                     marginLeft: '10px',
-                    backgroundColor: '#c62828',
                     padding: '3px 5px',
+                    backgroundColor: '#fce4ec',
                   }}
                 >
-                  Out of stock
+                  Out of Stock
                 </span>
               )}
             </p>
@@ -166,11 +161,10 @@ export default function HomeCard({ item }) {
       <Tooltip placement="left-start" title="Add product to your cart">
         <Button
           onClick={handleAddToCart}
-          size="small"
+          className={classes.button}
           disabled={item.quantity < 1}
           startIcon={<ShoppingCartIcon />}
-          className={classes.button}
-          variant="contained"
+          variant="outlined"
         >
           Add to Cart
         </Button>

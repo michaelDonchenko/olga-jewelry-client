@@ -35,8 +35,8 @@ const AdminSideNav = () => {
 
   const [state, setState] = useState({ left: false })
 
-  const logoutHandler = () => {
-    firebase.auth().signOut()
+  const logoutHandler = async () => {
+    await firebase.auth().signOut()
     dispatch({
       type: LOGOUT,
       payload: null,
@@ -57,34 +57,40 @@ const AdminSideNav = () => {
   const sideDrawerList = (anchor) => (
     <div
       className={classes.list}
-      role='presentation'
+      role="presentation"
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <List>
-        <ListSubheader component='div' id='nested-list-subheader'>
+        <ListSubheader component="div" id="nested-list-subheader">
           Menu
         </ListSubheader>
-        <NavLink className={classes.link} to='/admin/dashboard'>
+        <NavLink className={classes.link} to="/admin/dashboard">
           <ListItem button>
-            <ListItemText primary='Orders' />
+            <ListItemText primary="Orders" />
           </ListItem>
         </NavLink>
 
-        <NavLink className={classes.link} to='/admin/categories'>
+        <NavLink className={classes.link} to="/admin/categories">
           <ListItem button>
-            <ListItemText primary='Categories' />
+            <ListItemText primary="Categories" />
           </ListItem>
         </NavLink>
 
-        <NavLink className={classes.link} to='/admin/product'>
+        <NavLink className={classes.link} to="/admin/product">
           <ListItem button>
-            <ListItemText primary='Create product' />
+            <ListItemText primary="Create product" />
           </ListItem>
         </NavLink>
-        <NavLink className={classes.link} to='/admin/products'>
+        <NavLink className={classes.link} to="/admin/products">
           <ListItem button>
-            <ListItemText primary='All products' />
+            <ListItemText primary="All products" />
+          </ListItem>
+        </NavLink>
+
+        <NavLink className={classes.link} to="/admin/comments">
+          <ListItem button>
+            <ListItemText primary="Comments" />
           </ListItem>
         </NavLink>
 
@@ -92,7 +98,7 @@ const AdminSideNav = () => {
           <ListItemIcon style={{ minWidth: '30px' }}>
             <ExitToAppIcon />
           </ListItemIcon>
-          <ListItemText primary='Logout' />
+          <ListItemText primary="Logout" />
         </ListItem>
       </List>
     </div>
@@ -104,14 +110,14 @@ const AdminSideNav = () => {
         fullWidth
         startIcon={<Menu style={{ color: 'white' }} />}
         style={{ backgroundColor: '#607d8b', color: 'white' }}
-        variant='contained'
-        aria-label='menu'
+        variant="contained"
+        aria-label="menu"
         onClick={toggleDrawer('left', true)}
       >
         Admin Menu
       </Button>
       <Drawer
-        anchor='left'
+        anchor="left"
         open={state.left}
         onOpen={toggleDrawer('left', true)}
         onClose={toggleDrawer('left', false)}

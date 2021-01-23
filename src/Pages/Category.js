@@ -31,10 +31,6 @@ const Category = ({ match, history }) => {
 
   const { loading, error, category, products, page, pages, pageSize } = state
 
-  const goBackHandler = () => {
-    history.push('/shop')
-  }
-
   const getCategory = async () => {
     setState({ ...state, loading: true })
     try {
@@ -60,12 +56,6 @@ const Category = ({ match, history }) => {
 
   return (
     <div>
-      <Link className={classes.link} onClick={goBackHandler}>
-        <Button variant="contained" style={{ margin: '15px 0' }}>
-          Go to Shop
-        </Button>
-      </Link>
-
       {loading && (
         <div style={{ textAlign: 'center', margin: '15px 0' }}>
           <CircularProgress />
@@ -78,13 +68,12 @@ const Category = ({ match, history }) => {
           display: 'flex',
           flexWrap: 'wrap',
           justifyContent: 'center',
-          margin: '15px',
         }}
       >
         {products &&
           products.length >= 1 &&
           products.map((p, i) => (
-            <div style={{ margin: '15px' }}>
+            <div>
               <HomeCard key={i} item={p} />
             </div>
           ))}

@@ -18,63 +18,66 @@ import CreateProduct from './Pages/adminPages/CreateProduct'
 import AdminProducts from './Pages/adminPages/AdminProducts'
 import UpdateProduct from './Pages/adminPages/UpdateProduct'
 import firebase from 'firebase'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { REFRESH_TOKEN } from './types/userTypes'
 import Product from './Pages/Product'
 import Category from './Pages/Category'
 import Checkout from './Pages/Checkout'
 import OrderSuccess from './Pages/OrderSuccess'
+import UserOrderPage from './Pages/UserOrderPage'
+import ForgotPassword from './Pages/authPages/ForgotPassword'
+import AdminOrder from './Pages/adminPages/AdminOrder'
+import Comments from './Pages/adminPages/Comments'
 
 const App = () => {
-  const user = useSelector((state) => state.user)
   const dispatch = useDispatch()
 
   useEffect(() => {
-    if (user) {
-      return firebase.auth().onIdTokenChanged(async (firebaseUser) => {
-        if (!firebaseUser) {
-          console.log('No firebase user looged in')
-          return
-        } else {
-          return (
-            localStorage.setItem(
-              'userInfo',
-              JSON.stringify({
-                email: user.email,
-                token: firebaseUser.ya,
-                role: user.role,
-                id: user.id,
-              })
-            ),
-            dispatch({
-              type: REFRESH_TOKEN,
-              payload: {
-                email: user.email,
-                token: firebaseUser.ya,
-                role: user.role,
-                id: user.id,
-              },
-            }),
-            console.log('token set')
-          )
-        }
-      })
-    }
+    firebase.auth().onIdTokenChanged(async () => {
+      const firebaseUser = await firebase.auth().currentUser
+      let user = await JSON.parse(localStorage.getItem('userInfo'))
+      if (firebaseUser && user) {
+        return (
+          localStorage.setItem(
+            'userInfo',
+            JSON.stringify({
+              email: user.email,
+              token: firebaseUser.ya,
+              role: user.role,
+              id: user.id,
+            })
+          ),
+          dispatch({
+            type: REFRESH_TOKEN,
+            payload: {
+              email: user.email,
+              token: firebaseUser.ya,
+              role: user.role,
+              id: user.id,
+            },
+          }),
+          console.log('Token Set')
+        )
+      }
+    })
   }, [])
 
-  // force refresh the token every 30 minutes
+  // force refresh the token every 20 minutes
   useEffect(() => {
     const handle = setInterval(async () => {
       const firebaseUser = await firebase.auth().currentUser
-      if (firebaseUser) {
+      let user = await JSON.parse(localStorage.getItem('userInfo'))
+      // console.log('User:', user, 'FirebaseUser:', firebaseUser)
+      if (firebaseUser && user) {
         console.log('forced refresh')
         return await firebaseUser.getIdToken(true)
       }
-    }, 60000 * 10)
+      console.log('Did not force refresh')
+    }, 60000 * 20)
 
     // clean up setInterval
     return () => clearInterval(handle)
-  }, [])
+  })
 
   return (
     <>
@@ -86,6 +89,7 @@ const App = () => {
           <Route exact path="/login" component={Login} />
           <Route exact path="/register" component={Register} />
           <Route exact path="/register/complete" component={RegisterComplete} />
+          <Route exact path="/forgot-password" component={ForgotPassword} />
           <Route exact path="/shop" component={Shop} />
           <Route exact path="/shop/:pageNumber" component={Shop} />
           <Route exact path="/product/:id" component={Product} />
@@ -108,10 +112,28 @@ const App = () => {
             path="/user/history"
             component={PurchaseHistory}
           />
+          <PrivateRoute
+            exact
+            path="/user/order/:id"
+            component={UserOrderPage}
+          />
           <AdminRoute
             exact
             path="/admin/dashboard"
             component={AdminDashboard}
+          />
+
+          <AdminRoute
+            exact
+            path="/admin/dashboard/:pageNumber"
+            component={AdminDashboard}
+          />
+          <AdminRoute exact path="/admin/order/:id" component={AdminOrder} />
+          <AdminRoute exact path="/admin/comments" component={Comments} />
+          <AdminRoute
+            exact
+            path="/admin/comments/:pageNumber"
+            component={Comments}
           />
           <AdminRoute
             exact

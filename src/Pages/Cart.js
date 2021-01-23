@@ -25,6 +25,9 @@ const useStyles = makeStyles({
       backgroundColor: '#388e3c',
     },
   },
+  link: {
+    textDecoration: 'none',
+  },
 })
 
 const Cart = ({ history }) => {
@@ -223,7 +226,11 @@ const Cart = ({ history }) => {
           )}
           {!user && (
             <p style={{ color: 'GrayText' }}>
-              Please log-In in order to continue to checkout.
+              Please{' '}
+              <Link to="/login" className={classes.link}>
+                log-In
+              </Link>{' '}
+              in order to continue to checkout.
             </p>
           )}
           {user && (

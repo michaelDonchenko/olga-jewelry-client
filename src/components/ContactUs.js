@@ -1,7 +1,15 @@
-import { Button, Grid, Paper, TextField } from '@material-ui/core'
+import {
+  Button,
+  CircularProgress,
+  Grid,
+  Paper,
+  TextField,
+} from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core'
 import { useSelector } from 'react-redux'
+import { postMessage } from '../controllers/userControllers'
+import { Alert } from '@material-ui/lab'
 
 const useStyles = makeStyles({
   iconDiv: {
@@ -24,16 +32,33 @@ const ContactUs = () => {
     message: '',
     loading: '',
     error: '',
+    success: '',
   })
 
-  const { email, subject, message, loading, error } = state
+  const { email, subject, message, loading, error, success } = state
 
   const onChange = (e) => {
     setState({ ...state, [e.target.name]: e.target.value })
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
+    setState({ ...state, loading: true })
+    try {
+      await postMessage({ email, subject, message }, user.token)
+      setState({
+        ...state,
+        loading: false,
+        error: false,
+        success: 'Your message was succefully sent.',
+        email: '',
+        subject: '',
+        message: '',
+      })
+    } catch (error) {
+      console.log(error)
+      setState({ ...state, loading: false, error: error.response })
+    }
   }
 
   useEffect(() => {
@@ -82,6 +107,35 @@ const ContactUs = () => {
       </Grid>
       <Grid md={6} xs={12} item>
         <h3 style={{ textAlign: 'center' }}>Send a Message</h3>
+
+        {success && (
+          <Alert
+            style={{ margin: '15px auto', maxWidth: '400px' }}
+            severity="success"
+            onClose={() => {
+              setState({ ...state, success: false })
+            }}
+          >
+            {success}
+          </Alert>
+        )}
+        {loading && (
+          <div style={{ textAlign: 'center', margin: '15px 0' }}>
+            <CircularProgress />
+          </div>
+        )}
+        {error && (
+          <Alert
+            style={{ margin: '15px auto', maxWidth: '400px' }}
+            severity="error"
+            onClose={() => {
+              setState({ ...state, error: false })
+            }}
+          >
+            {error}
+          </Alert>
+        )}
+
         <form onSubmit={handleSubmit}>
           <Paper
             elevation={3}
@@ -117,24 +171,31 @@ const ContactUs = () => {
               value={message}
               label="Message"
               multiline
-              rows={3}
+              rows={5}
               fullWidth
               type="text"
               helperText="Type your message"
               required
             ></TextField>
 
-            <Button
-              type="submit"
-              style={{
-                backgroundColor: '#0d47a1',
-                color: 'white',
-                margin: '15px 0',
-                padding: '5px 15px',
-              }}
-            >
-              Send A Message
-            </Button>
+            {user ? (
+              <Button
+                variant="outlined"
+                type="submit"
+                style={{
+                  color: '#3949ab',
+                  margin: '15px 0',
+                  padding: '5px 15px',
+                  borderColor: '#3949ab',
+                }}
+              >
+                Send A Message
+              </Button>
+            ) : (
+              <p style={{ color: 'GrayText' }}>
+                *Only logged in users can send messages
+              </p>
+            )}
           </Paper>
         </form>
       </Grid>

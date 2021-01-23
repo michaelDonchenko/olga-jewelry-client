@@ -9,6 +9,7 @@ import logo from '../public/logo.png'
 import HomeCard from '../components/HomeCard'
 import ContactUs from '../components/ContactUs'
 import { Link as ScrollLink } from 'react-scroll'
+import ShopIcon from '@material-ui/icons/Shop'
 
 const useStyles = makeStyles({
   flexContainer: {
@@ -21,12 +22,12 @@ const useStyles = makeStyles({
   },
   link: {
     textDecoration: 'none',
-    display: 'block',
   },
   button: {
     color: 'white',
     backgroundColor: 'black',
-    margin: '10px 0',
+    margin: '10px',
+
     '&:hover': {
       color: '#e3f2fd',
       backgroundColor: 'black',
@@ -74,7 +75,7 @@ const Home = () => {
   return (
     <>
       <Grid container direction="row">
-        <Grid style={{ margin: '10px' }} item md={2} xs={12}>
+        <Grid style={{ margin: '10px 0' }} item md={2} xs={12}>
           <img style={{ height: '60px' }} src={logo} />
         </Grid>
         <Grid style={{ margin: '10px' }} item md={8} xs={12}>
@@ -108,7 +109,12 @@ const Home = () => {
           </ScrollLink>
 
           <Link className={classes.link} to="/shop">
-            <Button size="small" className={classes.button} variant="contained">
+            <Button
+              startIcon={<ShopIcon />}
+              size="small"
+              className={classes.button}
+              variant="contained"
+            >
               Go To Shop
             </Button>
           </Link>
@@ -138,7 +144,7 @@ const Home = () => {
         </h1>
         {loading ? (
           <div style={{ textAlign: 'center', margin: '15px 0' }}>
-            <CircularProgress color="black" />
+            <CircularProgress />
           </div>
         ) : (
           <div

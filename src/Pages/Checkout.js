@@ -11,10 +11,10 @@ import { EMPTY_CART } from '../types/cartTypes'
 
 const useStyles = makeStyles({
   personalInfoButton: {
-    color: 'white',
-    backgroundColor: 'black',
+    color: 'black',
+    backgroundColor: '#bbdefb',
     '&:hover': {
-      backgroundColor: 'black',
+      backgroundColor: '#90caf9',
     },
   },
   createOrderButton: {
@@ -49,6 +49,7 @@ const Checkout = ({ history }) => {
   })
 
   const [personalInfo, setPersonalInfo] = useState({
+    email: user && user.email,
     fullName: '',
     phoneNumber: '',
     city: '',
@@ -68,6 +69,7 @@ const Checkout = ({ history }) => {
     order,
   } = state
   const {
+    email,
     fullName,
     phoneNumber,
     city,
@@ -103,7 +105,7 @@ const Checkout = ({ history }) => {
       setState({
         ...state,
         userInfoLoading: false,
-        error: 'There was an error please try again.',
+        error: 'There was an error please try again or contact the admin.',
         message: false,
         success: false,
       })
@@ -179,13 +181,36 @@ const Checkout = ({ history }) => {
           <h2>Personal Info:</h2>
           {success ? (
             message && (
-              <Alert style={{ marginRight: '15px' }} severity="success">
-                {message}
-              </Alert>
+              <>
+                <Alert style={{ marginRight: '15px' }} severity="success">
+                  {message}
+                </Alert>
+                <Alert
+                  style={{ marginRight: '15px', marginTop: '15px' }}
+                  severity="info"
+                >
+                  *Please Note: After you click on create order, your order will
+                  be sent to the admin and you will not be able to change the
+                  details anymore. Make sure eveything is correct and if needed
+                  you can go back now and change it.
+                </Alert>
+              </>
             )
           ) : (
             <form onSubmit={saveUserInfo}>
               <div>
+                <TextField
+                  onChange={onChange}
+                  name="email"
+                  value={email}
+                  required
+                  type="email"
+                  style={{
+                    width: windowWidth > 600 ? '60%' : '100%',
+                    margin: '10px 0',
+                  }}
+                  label="Email address"
+                />
                 <TextField
                   onChange={onChange}
                   name="fullName"
@@ -325,6 +350,11 @@ const Checkout = ({ history }) => {
             </h3>
           </div>
           <hr></hr>
+          {orderLoading && (
+            <div style={{ textAlign: 'center', margin: '15px 0' }}>
+              <CircularProgress />
+            </div>
+          )}
           <div>
             {success ? (
               <Button

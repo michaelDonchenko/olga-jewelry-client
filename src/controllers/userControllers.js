@@ -54,3 +54,33 @@ export const readOrder = async (id, authtoken) =>
       authtoken,
     },
   })
+
+export const getPaypalClientId = async (authtoken) =>
+  await axios.get(`${REACT_APP_SERVER_URL}/api/config/paypal`, {
+    headers: {
+      authtoken,
+    },
+  })
+
+export const updatePayment = async (id, authtoken, isPaid) =>
+  await axios.put(
+    `${REACT_APP_SERVER_URL}/api/user/order/${id}/payment-update`,
+    { isPaid },
+    {
+      headers: {
+        authtoken,
+      },
+    }
+  )
+
+export const userOrders = async (authtoken) =>
+  await axios.get(`${REACT_APP_SERVER_URL}/api/user/orders`, {
+    headers: { authtoken },
+  })
+
+export const postMessage = async (newMessage, authtoken) =>
+  await axios.post(`${REACT_APP_SERVER_URL}/api/user/message`, newMessage, {
+    headers: {
+      authtoken,
+    },
+  })

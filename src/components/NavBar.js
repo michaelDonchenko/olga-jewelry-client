@@ -40,7 +40,6 @@ const useStyles = makeStyles(() => ({
   },
   navIcon: { fontSize: '1.6rem' },
   menuIcon: { marginRight: '7px' },
-  activeLink: { color: '#0277bd' },
 }))
 
 const StyledBadge = withStyles((theme) => ({
@@ -69,8 +68,8 @@ const NavBar = () => {
     setAnchorEl(null)
   }
 
-  const logoutHandler = () => {
-    firebase.auth().signOut()
+  const logoutHandler = async () => {
+    await firebase.auth().signOut()
     dispatch({
       type: LOGOUT,
       payload: null,

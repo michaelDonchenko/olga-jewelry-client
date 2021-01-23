@@ -44,6 +44,13 @@ const Login = ({ history }) => {
         id: user.id,
       })
     )
+    if (user && user.role === 'subscriber') {
+      history.push('/user/profile')
+    }
+
+    if (user && user.role === 'admin') {
+      history.push('/admin/dashboard')
+    }
   }
 
   const [values, setValues] = useState({
@@ -132,18 +139,6 @@ const Login = ({ history }) => {
     }
   }
 
-  if (user && user.role === 'admin') {
-    history.push('/admin/dashboard')
-  } else if (user && user.role !== 'admin') {
-    // check if intended
-    let intended = history.location.state
-    if (intended) {
-      history.push(intended.from)
-    } else {
-      history.push('/user/profile')
-    }
-  }
-
   return (
     <Container
       maxWidth={'sm'}
@@ -151,11 +146,11 @@ const Login = ({ history }) => {
     >
       <h1>Login</h1>
 
-      {loading && <CircularProgress color='black' />}
+      {loading && <CircularProgress color="black" />}
       {error && (
         <Alert
           style={{ margin: '15px 0' }}
-          severity='error'
+          severity="error"
           onClose={() => {
             setValues({ ...values, error: false })
           }}
@@ -164,27 +159,27 @@ const Login = ({ history }) => {
         </Alert>
       )}
 
-      <form onSubmit={handleSubmit} autoComplete='off'>
+      <form onSubmit={handleSubmit} autoComplete="off">
         <TextField
           onChange={handleChange}
           value={email}
           className={classes.inputField}
-          name='email'
-          label='Email'
+          name="email"
+          label="Email"
           fullWidth
-          type='email'
-          helperText='Enter your email'
+          type="email"
+          helperText="Enter your email"
           required
         />
         <TextField
           onChange={handleChange}
           value={password}
           className={classes.inputField}
-          name='password'
-          label='Password'
+          name="password"
+          label="Password"
           fullWidth
-          type='password'
-          helperText='Enter your password'
+          type="password"
+          helperText="Enter your password"
           required
         />
 
@@ -192,9 +187,9 @@ const Login = ({ history }) => {
           style={{ backgroundColor: '#f3e5f5', color: 'black' }}
           className={classes.button}
           startIcon={<EmailIcon />}
-          type='submit'
+          type="submit"
           fullWidth
-          variant='contained'
+          variant="contained"
         >
           Login with Email/Password
         </Button>
@@ -204,22 +199,25 @@ const Login = ({ history }) => {
         style={{ backgroundColor: '#ffe0b2', color: 'black' }}
         className={classes.button}
         fullWidth
-        variant='contained'
+        variant="contained"
       >
         <i
-          className='fab fa-google'
+          className="fab fa-google"
           style={{ marginRight: '8px', fontSize: '1.2rem' }}
         ></i>{' '}
         Login with Google account
       </Button>
       <p>
-        <Link style={{ color: 'GrayText', marginLeft: '5px' }}>
+        <Link
+          to="/forgot-password"
+          style={{ color: 'GrayText', marginLeft: '5px' }}
+        >
           Forgot password?
         </Link>
       </p>
       <p>
         Don't have an account?
-        <Link style={{ color: 'GrayText', marginLeft: '5px' }} to='/register'>
+        <Link style={{ color: 'GrayText', marginLeft: '5px' }} to="/register">
           Register
         </Link>
       </p>

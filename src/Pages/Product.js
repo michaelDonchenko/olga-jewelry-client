@@ -86,9 +86,7 @@ const Product = ({ match, history }) => {
   return (
     <div style={{ margin: '30px 0 ', overflowWrap: 'break-word' }}>
       <Link className={classes.link} onClick={goBackHandler}>
-        <Button variant="contained" style={{ margin: '15px 0' }}>
-          Go back
-        </Button>
+        <Button style={{ margin: '15px 0' }}>Go back</Button>
       </Link>
       <Grid container>
         <Grid style={{ textAlign: 'center' }} xs={12} md={6} item>
@@ -104,12 +102,22 @@ const Product = ({ match, history }) => {
           <hr></hr>
           <p style={{ color: 'GrayText' }}>
             Details: <br></br>{' '}
-            <span style={{ color: 'black' }}>
+            <span
+              style={{
+                color: 'black',
+                whiteSpace: 'pre-line',
+                lineHeight: '1.5rem',
+              }}
+            >
               {product && product.description}
             </span>
           </p>
 
-          <p style={{ color: 'GrayText' }}>
+          <p
+            style={{
+              color: 'GrayText',
+            }}
+          >
             Price:{' '}
             <span
               style={{
