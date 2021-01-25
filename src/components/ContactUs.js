@@ -5,7 +5,7 @@ import {
   Paper,
   TextField,
 } from '@material-ui/core'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core'
 import { useSelector } from 'react-redux'
 import { postMessage } from '../controllers/userControllers'
@@ -27,7 +27,6 @@ const ContactUs = () => {
   const user = useSelector((state) => state.user)
 
   const [state, setState] = useState({
-    email: '',
     subject: '',
     message: '',
     loading: '',
@@ -35,7 +34,7 @@ const ContactUs = () => {
     success: '',
   })
 
-  const { email, subject, message, loading, error, success } = state
+  const { subject, message, loading, error, success } = state
 
   const onChange = (e) => {
     setState({ ...state, [e.target.name]: e.target.value })
@@ -45,13 +44,13 @@ const ContactUs = () => {
     e.preventDefault()
     setState({ ...state, loading: true })
     try {
-      await postMessage({ email, subject, message }, user.token)
+      await postMessage({ subject, message }, user.token)
       setState({
         ...state,
         loading: false,
         error: false,
         success: 'Your message was succefully sent.',
-        email: '',
+
         subject: '',
         message: '',
       })
@@ -60,12 +59,6 @@ const ContactUs = () => {
       setState({ ...state, loading: false, error: error.response })
     }
   }
-
-  useEffect(() => {
-    if (user) {
-      setState({ ...state, email: user.email })
-    }
-  }, [])
 
   return (
     <Grid container>
@@ -141,17 +134,6 @@ const ContactUs = () => {
             elevation={3}
             style={{ padding: '15px', maxWidth: '400px', margin: 'auto' }}
           >
-            <TextField
-              onChange={onChange}
-              style={{ margin: '15px 0' }}
-              name="email"
-              value={email}
-              label="Email"
-              fullWidth
-              helperText="Enter diffrent email if you want to"
-              type="text"
-              required
-            ></TextField>
             <TextField
               onChange={onChange}
               style={{ margin: '15px 0' }}

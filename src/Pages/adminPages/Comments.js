@@ -36,8 +36,6 @@ const Comments = ({ match }) => {
     }
   }
 
-  console.log(messages)
-
   useEffect(() => {
     getMessages()
   }, [pageNumber])
@@ -66,7 +64,9 @@ const Comments = ({ match }) => {
       {!loading && messages && messages.length < 1 && <p>No messages found</p>}
       {messages &&
         messages.length > 0 &&
-        messages.map((m, i) => <UserMessage key={i} message={m} />)}
+        messages.map((m, i) => (
+          <UserMessage key={i} message={m} messageType={'admin'} />
+        ))}
 
       <div
         style={{

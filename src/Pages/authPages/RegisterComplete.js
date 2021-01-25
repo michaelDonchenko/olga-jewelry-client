@@ -184,7 +184,7 @@ const RegisterComplete = ({ history }) => {
         />
 
         <Button
-          style={{ backgroundColor: '#7e57c2', color: 'white' }}
+          style={{ backgroundColor: '#f3e5f5', color: 'black' }}
           className={classes.button}
           type="submit"
           fullWidth

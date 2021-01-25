@@ -84,3 +84,8 @@ export const postMessage = async (newMessage, authtoken) =>
       authtoken,
     },
   })
+
+export const readMessages = async (authtoken) =>
+  await axios.get(`${REACT_APP_SERVER_URL}/api/user/messages`, {
+    headers: { authtoken },
+  })

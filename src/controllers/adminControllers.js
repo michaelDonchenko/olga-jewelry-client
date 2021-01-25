@@ -40,3 +40,14 @@ export const readMessages = async (pageNumber, authtoken) =>
       },
     }
   )
+
+export const messageAnswer = async (id, { answer }, authtoken) =>
+  await axios.put(
+    `${REACT_APP_SERVER_URL}/api/admin/messageAnswer/${id}`,
+    { answer },
+    {
+      headers: {
+        authtoken,
+      },
+    }
+  )

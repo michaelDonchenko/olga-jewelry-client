@@ -88,7 +88,7 @@ const Register = ({ history }) => {
         Please enter a valid email, confirmation link will be sent to your
         mailbox in order to complete your registration.
       </p>
-      {loading && <CircularProgress color='black' />}
+      {loading && <CircularProgress color="black" />}
       {success && (
         <Alert
           style={{ margin: '15px 0' }}
@@ -100,33 +100,33 @@ const Register = ({ history }) => {
         </Alert>
       )}
 
-      <form onSubmit={submitHandler} autoComplete='off'>
+      <form onSubmit={submitHandler} autoComplete="off">
         <TextField
           onChange={handleChange}
           className={classes.inputField}
           value={email}
-          name='email'
-          label='Email'
+          name="email"
+          label="Email"
           fullWidth
-          type='email'
-          helperText='Enter your email'
+          type="email"
+          helperText="Enter your email"
           required
         />
 
         <Button
-          style={{ backgroundColor: '#7e57c2', color: 'white' }}
+          style={{ backgroundColor: '#f3e5f5', color: 'black' }}
           className={classes.button}
-          type='submit'
+          type="submit"
           fullWidth
           startIcon={<SendIcon />}
-          variant='contained'
+          variant="contained"
         >
           Submit Registration
         </Button>
       </form>
       <p>
         Already have an account?{' '}
-        <Link style={{ color: 'GrayText', marginLeft: '5px' }} to='/login'>
+        <Link style={{ color: 'GrayText', marginLeft: '5px' }} to="/login">
           Login
         </Link>
       </p>

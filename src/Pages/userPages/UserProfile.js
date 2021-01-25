@@ -2,16 +2,15 @@ import {
   Button,
   CircularProgress,
   Grid,
-  List,
   Paper,
   TextField,
 } from '@material-ui/core'
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core'
-import { NavLink } from 'react-router-dom'
 import { Alert } from '@material-ui/lab'
-import { postMessage } from '../../controllers/userControllers'
+import { postMessage, readMessages } from '../../controllers/userControllers'
+import UserMessage from '../../components/UserMessage'
 
 const useStyles = makeStyles({
   button: {
@@ -44,15 +43,24 @@ const UserProfile = () => {
   const user = useSelector((state) => state.user)
 
   const [state, setState] = useState({
-    email: '',
     subject: '',
     message: '',
     loading: '',
+    loadingMessages: '',
     error: '',
     success: '',
+    messages: [],
   })
 
-  const { email, subject, message, loading, error, success } = state
+  const {
+    subject,
+    message,
+    loading,
+    error,
+    success,
+    messages,
+    loadingMessages,
+  } = state
 
   const onChange = (e) => {
     setState({ ...state, [e.target.name]: e.target.value })
@@ -62,15 +70,16 @@ const UserProfile = () => {
     e.preventDefault()
     setState({ ...state, loading: true })
     try {
-      await postMessage({ email, subject, message }, user.token)
+      await postMessage({ subject, message }, user.token)
+      const { data } = await readMessages(user.token)
       setState({
         ...state,
         loading: false,
         error: false,
-        success: 'Your message was succefully sent.',
-        email: '',
+        success: 'Message Posted',
         subject: '',
         message: '',
+        messages: data,
       })
     } catch (error) {
       console.log(error)
@@ -78,90 +87,69 @@ const UserProfile = () => {
     }
   }
 
-  useEffect(() => {
-    if (user) {
-      setState({ ...state, email: user.email })
+  const getMessages = async () => {
+    setState({ ...state, loadingMessages: true })
+    try {
+      const { data } = await readMessages(user.token)
+      setState({ ...state, loadingMessages: false, messages: data })
+    } catch (error) {
+      console.log(error)
+      setState({
+        ...state,
+        loadingMessages: false,
+        error: error.response.data.error,
+      })
     }
+  }
+
+  useEffect(() => {
+    getMessages()
   }, [])
 
   return (
     <div>
       <h1>User Profile</h1>
       <h3 style={{ marginBottom: '50px' }}>Hello {user && user.email}</h3>
-      <hr></hr>
+      <hr style={{ marginBottom: '50px' }}></hr>
       <Grid container>
         <Grid item xs={12} md={4} style={{ textAlign: 'center' }}>
-          <h3>Quick Navigation</h3>
-          <List component="nav" className={classes.flexContainer}>
-            <NavLink className={classes.link} to="/">
-              <Button variant="contained" className={classes.button}>
-                Home
-              </Button>
-            </NavLink>
-            <NavLink className={classes.link} to="/shop">
-              <Button variant="contained" className={classes.button}>
-                Shop
-              </Button>
-            </NavLink>
-            <NavLink className={classes.link} to="/cart">
-              <Button variant="contained" className={classes.button}>
-                Cart
-              </Button>
-            </NavLink>
-            <NavLink className={classes.link} to="/user/history">
-              <Button variant="contained" className={classes.button}>
-                Purchase History
-              </Button>
-            </NavLink>
-          </List>
-        </Grid>
-        <Grid item xs={12} md={8}>
-          <h3 style={{ textAlign: 'center' }}>Send us a message</h3>
-
-          {success && (
-            <Alert
-              style={{ margin: '15px auto', maxWidth: '400px' }}
-              severity="success"
-              onClose={() => {
-                setState({ ...state, success: false })
-              }}
-            >
-              {success}
-            </Alert>
-          )}
-          {loading && (
-            <div style={{ textAlign: 'center', margin: '15px 0' }}>
-              <CircularProgress />
-            </div>
-          )}
-          {error && (
-            <Alert
-              style={{ margin: '15px auto', maxWidth: '400px' }}
-              severity="error"
-              onClose={() => {
-                setState({ ...state, error: false })
-              }}
-            >
-              {error}
-            </Alert>
-          )}
-
           <form onSubmit={handleSubmit} style={{ marginBottom: '50px' }}>
-            <Paper
+            <div
               elevation={3}
-              style={{ padding: '15px', maxWidth: '400px', margin: 'auto' }}
+              style={{
+                padding: '15px',
+                maxWidth: '300px',
+                margin: '15px auto',
+              }}
             >
-              <TextField
-                onChange={onChange}
-                style={{ margin: '15px 0' }}
-                name="email"
-                value={email}
-                label="Email"
-                fullWidth
-                helperText="Enter diffrent email if you want to"
-                type="text"
-                required
-              ></TextField>
+              {success && (
+                <Alert
+                  style={{ margin: '15px auto', maxWidth: '90%' }}
+                  severity="success"
+                  onClose={() => {
+                    setState({ ...state, success: false })
+                  }}
+                >
+                  {success}
+                </Alert>
+              )}
+              {loading && (
+                <div style={{ textAlign: 'center', margin: '15px 0' }}>
+                  <CircularProgress />
+                </div>
+              )}
+              {error && (
+                <Alert
+                  style={{ margin: '15px auto', maxWidth: '90%' }}
+                  severity="error"
+                  onClose={() => {
+                    setState({ ...state, error: false })
+                  }}
+                >
+                  {error}
+                </Alert>
+              )}
+              <h4>Send a new message</h4>
               <TextField
                 onChange={onChange}
                 style={{ margin: '15px 0' }}
@@ -198,10 +186,29 @@ const UserProfile = () => {
                   borderColor: '#3949ab',
                 }}
               >
-                Send A Message
+                New Message
               </Button>
-            </Paper>
+            </div>
           </form>
+        </Grid>
+        <Grid item xs={12} md={8}>
+          <h3 style={{ textAlign: 'center' }}>Your Messages</h3>
+          {loadingMessages && (
+            <div style={{ textAlign: 'center', margin: '15px 0' }}>
+              <CircularProgress />
+            </div>
+          )}
+          {!loading && messages && messages.length < 1 && (
+            <h5 style={{ margin: '20px 0', textAlign: 'center' }}>
+              You have no messages.
+            </h5>
+          )}
+          {!loading &&
+            messages &&
+            messages.length > 0 &&
+            messages.map((m, i) => (
+              <UserMessage key={i} message={m} messageType={'user'} />
+            ))}
         </Grid>
       </Grid>
     </div>
