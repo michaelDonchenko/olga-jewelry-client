@@ -218,7 +218,7 @@ const AdminProducts = ({ history, match }) => {
           justifyContent: 'center',
         }}
       >
-        {pages && (
+        {pages && pages > 1 && (
           <Pagination
             hidePrevButton
             hideNextButton

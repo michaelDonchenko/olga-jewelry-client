@@ -100,11 +100,13 @@ const UserOrderPage = ({ match }) => {
           {/* Bank Transfer */}
           {order &&
             order.isPaid === false &&
+            order.orderStatus !== 'Cancelled' &&
             order.paymentInfo.paymentMethod === '0' && <BankTransferPayment />}
 
           {/* Phone payment */}
           {order &&
             order.isPaid === false &&
+            order.orderStatus !== 'Cancelled' &&
             order.paymentInfo.paymentMethod === '1' && <PhonePayment />}
 
           {/* PayPal */}
@@ -120,6 +122,7 @@ const UserOrderPage = ({ match }) => {
             {order &&
               !order.isPaid &&
               sdk &&
+              order.orderStatus !== 'Cancelled' &&
               order.paymentInfo.paymentMethod === '2' && (
                 <Grid container>
                   <Grid item xs={12} md={6}>

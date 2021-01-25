@@ -15,6 +15,7 @@ import {
   TableRow,
 } from '@material-ui/core'
 import moment from 'moment'
+import { Pagination, PaginationItem } from '@material-ui/lab'
 
 const useStyles = makeStyles({
   link: {
@@ -22,23 +23,32 @@ const useStyles = makeStyles({
   },
 })
 
-const PurchaseHistory = () => {
+const PurchaseHistory = ({ match }) => {
   const classes = useStyles()
   const user = useSelector((state) => state.user)
   const [state, setState] = useState({
     orders: [],
     loading: '',
     error: '',
+    page: '',
+    pages: '',
+    pageSize: '',
   })
 
-  const { orders, loading, error } = state
+  const { orders, loading, error, page, pages, pageSize } = state
+  const pageNumber = match.params.pageNumber || 1
 
   const getUserOrdrs = async () => {
     setState({ ...state, loading: true })
     try {
-      const { data } = await userOrders(user.token)
-      console.log(data)
-      setState({ ...state, orders: data, loading: false })
+      const { data } = await userOrders(pageNumber, user.token)
+
+      setState({
+        ...state,
+        orders: data.userOrders,
+        loading: false,
+        pages: data.pages,
+      })
     } catch (error) {
       console.log(error.message)
       setState({ ...state, error: error.message, loading: false })
@@ -47,7 +57,7 @@ const PurchaseHistory = () => {
 
   useEffect(() => {
     getUserOrdrs()
-  }, [])
+  }, [pageNumber])
 
   return (
     <div>
@@ -120,6 +130,33 @@ const PurchaseHistory = () => {
           </TableContainer>
         </div>
       )}
+
+      <div
+        style={{
+          margin: '15px 0 50px 0',
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      >
+        {pages && pages > 1 && (
+          <Pagination
+            hidePrevButton
+            hideNextButton
+            showFirstButton
+            showLastButton
+            color="primary"
+            count={pages}
+            renderItem={(item) => (
+              <PaginationItem
+                component={Link}
+                page={pageNumber}
+                to={`/user/history/${item.page}`}
+                {...item}
+              />
+            )}
+          />
+        )}
+      </div>
     </div>
   )
 }

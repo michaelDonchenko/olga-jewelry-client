@@ -109,11 +109,23 @@ const UserProfile = () => {
   return (
     <div>
       <h1>User Profile</h1>
-      <h3 style={{ marginBottom: '50px' }}>Hello {user && user.email}</h3>
-      <hr style={{ marginBottom: '50px' }}></hr>
+      <h3 style={{ marginBottom: '20px' }}>Hello {user && user.email}</h3>
+      <hr style={{ marginBottom: '20px' }}></hr>
+      {error && (
+        <Alert
+          style={{ margin: '15px auto', maxWidth: '90%' }}
+          severity="error"
+          onClose={() => {
+            setState({ ...state, error: false })
+          }}
+        >
+          {error}
+        </Alert>
+      )}
+
       <Grid container>
         <Grid item xs={12} md={4} style={{ textAlign: 'center' }}>
-          <form onSubmit={handleSubmit} style={{ marginBottom: '50px' }}>
+          <form onSubmit={handleSubmit} style={{ marginBottom: '20px' }}>
             <div
               elevation={3}
               style={{
@@ -138,17 +150,7 @@ const UserProfile = () => {
                   <CircularProgress />
                 </div>
               )}
-              {error && (
-                <Alert
-                  style={{ margin: '15px auto', maxWidth: '90%' }}
-                  severity="error"
-                  onClose={() => {
-                    setState({ ...state, error: false })
-                  }}
-                >
-                  {error}
-                </Alert>
-              )}
+
               <h4>Send a new message</h4>
               <TextField
                 onChange={onChange}

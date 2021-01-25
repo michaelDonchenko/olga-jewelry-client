@@ -114,6 +114,11 @@ const App = () => {
           />
           <PrivateRoute
             exact
+            path="/user/history/:pageNumber"
+            component={PurchaseHistory}
+          />
+          <PrivateRoute
+            exact
             path="/user/order/:id"
             component={UserOrderPage}
           />

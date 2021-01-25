@@ -73,10 +73,13 @@ export const updatePayment = async (id, authtoken, isPaid) =>
     }
   )
 
-export const userOrders = async (authtoken) =>
-  await axios.get(`${REACT_APP_SERVER_URL}/api/user/orders`, {
-    headers: { authtoken },
-  })
+export const userOrders = async (pageNumber, authtoken) =>
+  await axios.get(
+    `${REACT_APP_SERVER_URL}/api/user/orders?pageNumber=${pageNumber}`,
+    {
+      headers: { authtoken },
+    }
+  )
 
 export const postMessage = async (newMessage, authtoken) =>
   await axios.post(`${REACT_APP_SERVER_URL}/api/user/message`, newMessage, {

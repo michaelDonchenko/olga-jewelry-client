@@ -89,7 +89,7 @@ const Category = ({ match, history }) => {
           justifyContent: 'center',
         }}
       >
-        {pages && (
+        {pages && pages > 1 && (
           <Pagination
             hidePrevButton
             hideNextButton

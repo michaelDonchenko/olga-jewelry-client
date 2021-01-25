@@ -175,11 +175,24 @@ const UserOrder = ({ order }) => {
               {order &&
                 order.products.map((p, i) => (
                   <div key={i} style={{ display: 'flex', margin: '10px 0' }}>
-                    <img style={{ height: '50px' }} src={p.product.images[0]} />
-                    <p style={{ margin: '0 10px' }}>
-                      {p.product.name} x {p.count} = ₪
-                      {p.product.price * p.count}
-                    </p>
+                    {p.product !== null ? (
+                      <>
+                        <img
+                          style={{ height: '50px' }}
+                          alt="Product img"
+                          src={p.product.images[0]}
+                        />
+                        <p style={{ margin: '0 10px' }}>
+                          {p.product.name} x {p.count} = ₪
+                          {p.product.price * p.count}
+                        </p>
+                      </>
+                    ) : (
+                      <p style={{ color: 'red' }}>
+                        Error: One product is missing (maybe it was deleted by
+                        the admin)
+                      </p>
+                    )}
                   </div>
                 ))}
             </div>
