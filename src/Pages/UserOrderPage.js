@@ -144,8 +144,8 @@ const UserOrderPage = ({ match }) => {
                     </h4>
                     <p>
                       *Please note that you can see your orders anytime at
-                      <Link style={{ margin: '0 5px' }} to={'/user/history'}>
-                        User History
+                      <Link style={{ margin: '0 5px' }} to={'/user/profile'}>
+                        User Profile
                       </Link>
                     </p>
                   </Grid>
@@ -194,8 +194,8 @@ const UserOrderPage = ({ match }) => {
                 <hr></hr>
                 <p>
                   You can see your orders anytime at
-                  <Link style={{ margin: '0 5px' }} to={'/user/history'}>
-                    User History
+                  <Link style={{ margin: '0 5px' }} to={'/user/profile'}>
+                    User Profile
                   </Link>
                 </p>
                 <p>

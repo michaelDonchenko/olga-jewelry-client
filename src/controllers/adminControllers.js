@@ -31,20 +31,10 @@ export const updateOrder = async (
     }
   )
 
-export const readMessages = async (pageNumber, authtoken) =>
-  await axios.get(
-    `${REACT_APP_SERVER_URL}/api/admin/messages?pageNumber=${pageNumber}`,
-    {
-      headers: {
-        authtoken,
-      },
-    }
-  )
-
-export const messageAnswer = async (id, { answer }, authtoken) =>
-  await axios.put(
-    `${REACT_APP_SERVER_URL}/api/admin/messageAnswer/${id}`,
-    { answer },
+export const EditRules = async (value, authtoken) =>
+  await axios.post(
+    `${REACT_APP_SERVER_URL}/api/admin/edit`,
+    { value },
     {
       headers: {
         authtoken,

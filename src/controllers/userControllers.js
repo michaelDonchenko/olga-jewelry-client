@@ -92,3 +92,6 @@ export const readMessages = async (authtoken) =>
   await axios.get(`${REACT_APP_SERVER_URL}/api/user/messages`, {
     headers: { authtoken },
   })
+
+export const readRules = async () =>
+  await axios.get(`${REACT_APP_SERVER_URL}/api/siteRules`)

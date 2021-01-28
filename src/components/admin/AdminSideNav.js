@@ -88,9 +88,9 @@ const AdminSideNav = () => {
           </ListItem>
         </NavLink>
 
-        <NavLink className={classes.link} to="/admin/comments">
+        <NavLink className={classes.link} to="/admin/edit">
           <ListItem button>
-            <ListItemText primary="Comments" />
+            <ListItemText primary="Site Rules" />
           </ListItem>
         </NavLink>
 

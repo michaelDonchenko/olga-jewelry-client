@@ -149,9 +149,9 @@ const OrderSuccess = ({ match }) => {
                   <Link
                     className={classes.link}
                     style={{ margin: '0 5px' }}
-                    to={'/user/history'}
+                    to={'/user/profile'}
                   >
-                    User History
+                    User Profile
                   </Link>
                 </p>
               </Grid>
@@ -200,8 +200,8 @@ const OrderSuccess = ({ match }) => {
             <hr></hr>
             <p>
               You can see your orders anytime at
-              <Link style={{ margin: '0 5px' }} to={'/user/history'}>
-                User History
+              <Link style={{ margin: '0 5px' }} to={'/user/profile'}>
+                User Profile
               </Link>
             </p>
             <p>

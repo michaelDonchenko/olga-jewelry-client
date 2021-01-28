@@ -229,20 +229,7 @@ const NavBar = () => {
             to="/user/profile"
           >
             <MenuItem onClick={handleClose}>
-              <PersonIcon className={classes.menuIcon} /> Profile
-            </MenuItem>
-          </NavLink>
-
-          <NavLink
-            activeStyle={{
-              color: '#0277bd',
-              backgroundColor: '#e1f5fe',
-            }}
-            className={classes.link}
-            to="/user/history"
-          >
-            <MenuItem onClick={handleClose}>
-              <HistoryIcon className={classes.menuIcon} /> Purchase history
+              <PersonIcon className={classes.menuIcon} /> User Profile
             </MenuItem>
           </NavLink>
 

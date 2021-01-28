@@ -10,6 +10,9 @@ import HomeCard from '../components/HomeCard'
 import ContactUs from '../components/ContactUs'
 import { Link as ScrollLink } from 'react-scroll'
 import ShopIcon from '@material-ui/icons/Shop'
+import { readRules } from '../controllers/userControllers'
+import parse from 'html-react-parser'
+import { useSelector } from 'react-redux'
 
 const useStyles = makeStyles({
   flexContainer: {
@@ -36,11 +39,14 @@ const useStyles = makeStyles({
 })
 
 const Home = () => {
+  const user = useSelector((state) => state.user)
+
   const [state, setState] = useState({
     newArrivals: [],
     loading: '',
     error: '',
     categories: '',
+    siteRules: '',
   })
 
   const newArivalsValues = {
@@ -49,7 +55,7 @@ const Home = () => {
     limit: 3,
   }
 
-  const { newArrivals, loading, error, categories } = state
+  const { newArrivals, loading, error, categories, siteRules } = state
 
   const classes = useStyles()
 
@@ -58,10 +64,12 @@ const Home = () => {
     try {
       const newProducts = await listProducts(newArivalsValues)
       const categories = await listCategories()
+      const rules = await readRules()
       setState({
         ...state,
         newArrivals: newProducts.data,
         categories: categories.data,
+        siteRules: rules.data.rule,
         loading: false,
       })
     } catch (error) {
@@ -120,6 +128,19 @@ const Home = () => {
           </Link>
         </Grid>
       </Grid>
+      {user ? (
+        <h3 style={{ textAlign: 'center', margin: '20px 0 30px 0' }}>
+          Hello {user.email} , welcome back.
+        </h3>
+      ) : (
+        <h3 style={{ textAlign: 'center', margin: '20px 0 40px 0' }}>
+          Hello guest, click{' '}
+          <Link className={classes.link} to="/login">
+            here
+          </Link>{' '}
+          to log-in.
+        </h3>
+      )}
       <Container maxWidth="md" style={{ marginBottom: '100px' }}>
         {error && (
           <Alert
@@ -132,6 +153,7 @@ const Home = () => {
             {error}
           </Alert>
         )}
+
         <h1
           style={{
             textAlign: 'center',
@@ -218,11 +240,12 @@ const Home = () => {
             color: 'black',
             fontSize: '30px',
             backgroundColor: '#fafafa',
-            marginBottom: '200px',
+            marginBottom: '20px',
           }}
         >
           About and Policy rules
         </h2>
+        <div>{siteRules && !loading && parse(siteRules)}</div>
       </Container>
     </>
   )

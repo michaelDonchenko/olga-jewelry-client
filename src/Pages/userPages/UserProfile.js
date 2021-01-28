@@ -1,16 +1,21 @@
-import {
-  Button,
-  CircularProgress,
-  Grid,
-  Paper,
-  TextField,
-} from '@material-ui/core'
 import React, { useState, useEffect } from 'react'
+import { userOrders } from '../../controllers/userControllers'
 import { useSelector } from 'react-redux'
-import { makeStyles } from '@material-ui/core'
-import { Alert } from '@material-ui/lab'
-import { postMessage, readMessages } from '../../controllers/userControllers'
-import UserMessage from '../../components/UserMessage'
+import { Button, CircularProgress, makeStyles } from '@material-ui/core'
+import ClearIcon from '@material-ui/icons/Clear'
+import CheckIcon from '@material-ui/icons/Check'
+import { Link } from 'react-router-dom'
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from '@material-ui/core'
+import moment from 'moment'
+import { Pagination, PaginationItem } from '@material-ui/lab'
 
 const useStyles = makeStyles({
   button: {
@@ -38,181 +43,143 @@ const useStyles = makeStyles({
   },
 })
 
-const UserProfile = () => {
+const UserProfile = ({ match }) => {
   const classes = useStyles()
   const user = useSelector((state) => state.user)
-
   const [state, setState] = useState({
-    subject: '',
-    message: '',
+    orders: [],
     loading: '',
-    loadingMessages: '',
     error: '',
-    success: '',
-    messages: [],
+    page: '',
+    pages: '',
+    pageSize: '',
   })
 
-  const {
-    subject,
-    message,
-    loading,
-    error,
-    success,
-    messages,
-    loadingMessages,
-  } = state
+  const { orders, loading, error, page, pages, pageSize } = state
+  const pageNumber = match.params.pageNumber || 1
 
-  const onChange = (e) => {
-    setState({ ...state, [e.target.name]: e.target.value })
-  }
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+  const getUserOrdrs = async () => {
     setState({ ...state, loading: true })
     try {
-      await postMessage({ subject, message }, user.token)
-      const { data } = await readMessages(user.token)
-      setState({
-        ...state,
-        loading: false,
-        error: false,
-        success: 'Message Posted',
-        subject: '',
-        message: '',
-        messages: data,
-      })
-    } catch (error) {
-      console.log(error)
-      setState({ ...state, loading: false, error: error.response.data.error })
-    }
-  }
+      const { data } = await userOrders(pageNumber, user.token)
 
-  const getMessages = async () => {
-    setState({ ...state, loadingMessages: true })
-    try {
-      const { data } = await readMessages(user.token)
-      setState({ ...state, loadingMessages: false, messages: data })
-    } catch (error) {
-      console.log(error)
       setState({
         ...state,
-        loadingMessages: false,
-        error: error.response.data.error,
+        orders: data.userOrders,
+        loading: false,
+        pages: data.pages,
       })
+    } catch (error) {
+      console.log(error.message)
+      setState({ ...state, error: error.message, loading: false })
     }
   }
 
   useEffect(() => {
-    getMessages()
-  }, [])
+    getUserOrdrs()
+  }, [pageNumber])
 
   return (
     <div>
-      <h1>User Profile</h1>
-      <h3 style={{ marginBottom: '20px' }}>Hello {user && user.email}</h3>
-      <hr style={{ marginBottom: '20px' }}></hr>
-      {error && (
-        <Alert
-          style={{ margin: '15px auto', maxWidth: '90%' }}
-          severity="error"
-          onClose={() => {
-            setState({ ...state, error: false })
+      <h1 style={{ textAlign: 'center' }}>User Profile</h1>
+
+      <div>
+        <h2>Purchase History</h2>
+        <hr></hr>
+        {loading && (
+          <div style={{ textAlign: 'center', margin: '15px 0' }}>
+            <CircularProgress />
+          </div>
+        )}
+        {orders && !loading && orders.length < 1 ? (
+          <p>No orders found</p>
+        ) : (
+          <div>
+            <TableContainer component={Paper}>
+              <Table aria-label="customized table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="left">Created At</TableCell>
+                    <TableCell align="left">Order Status</TableCell>
+                    <TableCell align="left">Is Paid</TableCell>
+                    <TableCell align="left">Payment Method</TableCell>
+                    <TableCell align="left">Track Number</TableCell>
+                    <TableCell align="left">Total Price</TableCell>
+                    <TableCell align="left"></TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {orders && orders.length > 0
+                    ? orders.map((o, i) => (
+                        <TableRow key={i}>
+                          <TableCell>
+                            {moment(o.createdAt).format('MMMM Do YYYY')}
+                          </TableCell>
+                          <TableCell>{o.orderStatus}</TableCell>
+                          <TableCell>
+                            {o.isPaid === true ? (
+                              <CheckIcon style={{ color: 'green' }} />
+                            ) : (
+                              <ClearIcon style={{ color: 'red' }} />
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            {o.paymentInfo.paymentMethod === '0'
+                              ? 'Bank Transfer'
+                              : o.paymentInfo.paymentMethod === '1'
+                              ? 'Phone payment'
+                              : 'PayPal'}
+                          </TableCell>
+                          <TableCell>
+                            {o.trackNumber ? o.trackNumber : 'Not yet Recived'}
+                          </TableCell>
+                          <TableCell>₪{o.paymentInfo.amount}</TableCell>
+                          <TableCell>
+                            <Link
+                              className={classes.link}
+                              to={`/user/order/${o._id}`}
+                            >
+                              <Button variant="outlined" color="secondary">
+                                View Full Details
+                              </Button>
+                            </Link>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    : null}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </div>
+        )}
+
+        <div
+          style={{
+            margin: '15px 0 50px 0',
+            display: 'flex',
+            justifyContent: 'center',
           }}
         >
-          {error}
-        </Alert>
-      )}
-
-      <Grid container>
-        <Grid item xs={12} md={4} style={{ textAlign: 'center' }}>
-          <form onSubmit={handleSubmit} style={{ marginBottom: '20px' }}>
-            <div
-              elevation={3}
-              style={{
-                padding: '15px',
-                maxWidth: '300px',
-                margin: '15px auto',
-              }}
-            >
-              {success && (
-                <Alert
-                  style={{ margin: '15px auto', maxWidth: '90%' }}
-                  severity="success"
-                  onClose={() => {
-                    setState({ ...state, success: false })
-                  }}
-                >
-                  {success}
-                </Alert>
+          {pages && pages > 1 && (
+            <Pagination
+              hidePrevButton
+              hideNextButton
+              showFirstButton
+              showLastButton
+              color="primary"
+              count={pages}
+              renderItem={(item) => (
+                <PaginationItem
+                  component={Link}
+                  page={pageNumber}
+                  to={`/user/profile/${item.page}`}
+                  {...item}
+                />
               )}
-              {loading && (
-                <div style={{ textAlign: 'center', margin: '15px 0' }}>
-                  <CircularProgress />
-                </div>
-              )}
-
-              <h4>Send a new message</h4>
-              <TextField
-                onChange={onChange}
-                style={{ margin: '15px 0' }}
-                name="subject"
-                value={subject}
-                label="Subject"
-                fullWidth
-                helperText="Type your subject"
-                type="text"
-                required
-              ></TextField>
-
-              <TextField
-                onChange={onChange}
-                style={{ margin: '15px 0' }}
-                name="message"
-                value={message}
-                label="Message"
-                multiline
-                rows={5}
-                fullWidth
-                type="text"
-                helperText="Type your message"
-                required
-              ></TextField>
-
-              <Button
-                variant="outlined"
-                type="submit"
-                style={{
-                  color: '#3949ab',
-                  margin: '15px 0',
-                  padding: '5px 15px',
-                  borderColor: '#3949ab',
-                }}
-              >
-                New Message
-              </Button>
-            </div>
-          </form>
-        </Grid>
-        <Grid item xs={12} md={8}>
-          <h3 style={{ textAlign: 'center' }}>Your Messages</h3>
-          {loadingMessages && (
-            <div style={{ textAlign: 'center', margin: '15px 0' }}>
-              <CircularProgress />
-            </div>
+            />
           )}
-          {!loading && messages && messages.length < 1 && (
-            <h5 style={{ margin: '20px 0', textAlign: 'center' }}>
-              You have no messages.
-            </h5>
-          )}
-          {!loading &&
-            messages &&
-            messages.length > 0 &&
-            messages.map((m, i) => (
-              <UserMessage key={i} message={m} messageType={'user'} />
-            ))}
-        </Grid>
-      </Grid>
+        </div>
+      </div>
     </div>
   )
 }

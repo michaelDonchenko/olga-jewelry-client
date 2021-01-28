@@ -25,6 +25,7 @@ const useStyles = makeStyles({
     flexWrap: 'wrap',
     backgroundColor: '#607d8b',
     color: 'white',
+    borderRadius: 5,
   },
 })
 
@@ -65,9 +66,10 @@ const AdminNav = () => {
           <ListItemText primary="All products" />
         </ListItem>
       </NavLink>
-      <NavLink className={classes.link} to="/admin/comments">
+
+      <NavLink className={classes.link} to="/admin/edit">
         <ListItem button>
-          <ListItemText primary="Comments" />
+          <ListItemText primary="Site Rules" />
         </ListItem>
       </NavLink>
 

@@ -10,7 +10,6 @@ import Cart from './Pages/Cart'
 import RegisterComplete from './Pages/authPages/RegisterComplete'
 import PrivateRoute from './components/routes/PrivateRoute'
 import UserProfile from './Pages/userPages/UserProfile'
-import PurchaseHistory from './Pages/userPages/PurchaseHistory'
 import AdminRoute from './components/routes/AdminRoute'
 import AdminDashboard from './Pages/adminPages/AdminDashboard'
 import AdminCategories from './Pages/adminPages/AdminCategories'
@@ -27,7 +26,7 @@ import OrderSuccess from './Pages/OrderSuccess'
 import UserOrderPage from './Pages/UserOrderPage'
 import ForgotPassword from './Pages/authPages/ForgotPassword'
 import AdminOrder from './Pages/adminPages/AdminOrder'
-import Comments from './Pages/adminPages/Comments'
+import Edit from './Pages/adminPages/Edit'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -109,14 +108,10 @@ const App = () => {
           <PrivateRoute exact path="/user/profile" component={UserProfile} />
           <PrivateRoute
             exact
-            path="/user/history"
-            component={PurchaseHistory}
+            path="/user/profile/:pageNumber"
+            component={UserProfile}
           />
-          <PrivateRoute
-            exact
-            path="/user/history/:pageNumber"
-            component={PurchaseHistory}
-          />
+
           <PrivateRoute
             exact
             path="/user/order/:id"
@@ -134,12 +129,7 @@ const App = () => {
             component={AdminDashboard}
           />
           <AdminRoute exact path="/admin/order/:id" component={AdminOrder} />
-          <AdminRoute exact path="/admin/comments" component={Comments} />
-          <AdminRoute
-            exact
-            path="/admin/comments/:pageNumber"
-            component={Comments}
-          />
+
           <AdminRoute
             exact
             path="/admin/categories"
@@ -157,6 +147,7 @@ const App = () => {
             path="/admin/products/:pageNumber"
             component={AdminProducts}
           />
+          <AdminRoute exact path="/admin/edit" component={Edit} />
         </Switch>
       </Container>
     </>
