@@ -18,7 +18,7 @@ import AdminProducts from './Pages/adminPages/AdminProducts'
 import UpdateProduct from './Pages/adminPages/UpdateProduct'
 import firebase from 'firebase'
 import { useDispatch } from 'react-redux'
-import { REFRESH_TOKEN } from './types/userTypes'
+import { REFRESH_TOKEN, LOGOUT } from './types/userTypes'
 import Product from './Pages/Product'
 import Category from './Pages/Category'
 import Checkout from './Pages/Checkout'
@@ -27,6 +27,7 @@ import UserOrderPage from './Pages/UserOrderPage'
 import ForgotPassword from './Pages/authPages/ForgotPassword'
 import AdminOrder from './Pages/adminPages/AdminOrder'
 import Edit from './Pages/adminPages/Edit'
+import Footer from './components/Footer'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -78,11 +79,31 @@ const App = () => {
     return () => clearInterval(handle)
   })
 
+  // logout the user after 24hours
+  useEffect(() => {
+    const logout = setInterval(async () => {
+      const firebaseUser = await firebase.auth().currentUser
+      let user = await JSON.parse(localStorage.getItem('userInfo'))
+
+      if (firebaseUser && user)
+        return (
+          localStorage.removeItem('userInfo'),
+          dispatch({
+            type: LOGOUT,
+            payload: null,
+          })
+        )
+    }, 60000 * 1450)
+
+    // clean up setInterval
+    return () => clearInterval(logout)
+  })
+
   return (
     <>
       <NavBar />
 
-      <Container>
+      <Container style={{ minHeight: '75vh' }}>
         <Switch>
           <Route exact path="/" component={Home} />
           <Route exact path="/login" component={Login} />
@@ -150,6 +171,7 @@ const App = () => {
           <AdminRoute exact path="/admin/edit" component={Edit} />
         </Switch>
       </Container>
+      <Footer />
     </>
   )
 }

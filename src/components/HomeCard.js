@@ -15,7 +15,7 @@ const useStyles = makeStyles({
   root: {
     maxWidth: 250,
     height: 550,
-
+    boxShadow: '',
     margin: '15px',
     border: '1px solid ',
     borderColor: '#e1f5fe',
@@ -33,6 +33,10 @@ const useStyles = makeStyles({
   button: {
     margin: '10px',
     fontWeight: '600',
+    '&:hover': {
+      color: '#0d47a1',
+      borderColor: '#90caf9',
+    },
   },
 })
 

@@ -7,16 +7,8 @@ import { Link } from 'react-router-dom'
 import { CKEditor } from '@ckeditor/ckeditor5-react'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 import { EditRules } from '../../controllers/adminControllers'
-import { makeStyles } from '@material-ui/core'
-
-const useStyles = makeStyles({
-  textEditor: {
-    minHeight: '400px',
-  },
-})
 
 const Edit = () => {
-  const classes = useStyles()
   const [value, setValue] = useState('')
   const user = useSelector((state) => state.user)
 

@@ -24,3 +24,15 @@ export const login = async (authtoken) => {
     }
   )
 }
+
+export const loginWithGoogle = async (authtoken) => {
+  return await axios.post(
+    `${REACT_APP_SERVER_URL}/api/googleLogin`,
+    {},
+    {
+      headers: {
+        authtoken,
+      },
+    }
+  )
+}

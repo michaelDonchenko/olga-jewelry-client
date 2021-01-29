@@ -10,7 +10,7 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { auth, googleAuthProvider } from '../../firebase'
-import { login } from '../../controllers/authControllers'
+import { login, loginWithGoogle } from '../../controllers/authControllers'
 import { Alert } from '@material-ui/lab'
 import { LOGIN_USER } from '../../types/userTypes'
 
@@ -115,7 +115,7 @@ const Login = ({ history }) => {
       const { user } = res
       const idTokenResult = await user.getIdTokenResult()
 
-      login(idTokenResult.token)
+      loginWithGoogle(idTokenResult.token)
         .then((res) =>
           dispatch({
             type: LOGIN_USER,
