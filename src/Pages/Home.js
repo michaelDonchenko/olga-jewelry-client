@@ -69,7 +69,7 @@ const Home = () => {
         ...state,
         newArrivals: newProducts.data,
         categories: categories.data,
-        siteRules: rules.data.rule,
+        siteRules: rules.data.rule ? rules.data.rule : null,
         loading: false,
       })
     } catch (error) {
@@ -82,14 +82,14 @@ const Home = () => {
 
   return (
     <>
-      <Grid container direction="row">
+      <Grid container direction='row'>
         <Grid style={{ margin: '10px 0' }} item md={2} xs={12}>
           <img style={{ height: '60px' }} src={logo} />
         </Grid>
         <Grid style={{ margin: '10px' }} item md={8} xs={12}>
           <ScrollLink
             offset={-80}
-            to="categories"
+            to='categories'
             spy={true}
             smooth={true}
             duration={1000}
@@ -99,7 +99,7 @@ const Home = () => {
 
           <ScrollLink
             offset={-80}
-            to="contactUs"
+            to='contactUs'
             spy={true}
             smooth={true}
             duration={1000}
@@ -108,7 +108,7 @@ const Home = () => {
           </ScrollLink>
           <ScrollLink
             offset={-80}
-            to="about"
+            to='about'
             spy={true}
             smooth={true}
             duration={1000}
@@ -116,12 +116,12 @@ const Home = () => {
             <Button>About</Button>
           </ScrollLink>
 
-          <Link className={classes.link} to="/shop">
+          <Link className={classes.link} to='/shop'>
             <Button
               startIcon={<ShopIcon />}
-              size="small"
+              size='small'
               className={classes.button}
-              variant="contained"
+              variant='contained'
             >
               Go To Shop
             </Button>
@@ -135,17 +135,17 @@ const Home = () => {
       ) : (
         <h3 style={{ textAlign: 'center', margin: '20px 0 40px 0' }}>
           Hello guest, click{' '}
-          <Link className={classes.link} to="/login">
+          <Link className={classes.link} to='/login'>
             here
           </Link>{' '}
           to log-in.
         </h3>
       )}
-      <Container maxWidth="md" style={{ marginBottom: '100px' }}>
+      <Container maxWidth='md' style={{ marginBottom: '100px' }}>
         {error && (
           <Alert
             style={{ margin: '15px 0' }}
-            severity="error"
+            severity='error'
             onClose={() => {
               setState({ ...state, error: false })
             }}
@@ -182,7 +182,7 @@ const Home = () => {
         )}
 
         <h1
-          id="categories"
+          id='categories'
           style={{
             textAlign: 'center',
             color: 'black',
@@ -219,7 +219,7 @@ const Home = () => {
         </div>
 
         <h2
-          id="contactUs"
+          id='contactUs'
           style={{
             textAlign: 'center',
             color: 'black',
@@ -234,7 +234,7 @@ const Home = () => {
         </div>
 
         <h2
-          id="about"
+          id='about'
           style={{
             textAlign: 'center',
             color: 'black',
